@@ -1,5 +1,7 @@
 # crane-maturin
 
+[![builds.sr.ht status](https://builds.sr.ht/~vlaci/crane-maturin.svg)](https://builds.sr.ht/~vlaci/crane-maturin?)
+
 Helper to build python packages with [maturin](https://maturin.rs) and cache their build dependencies through [crane](https://crane.dev)
 
 # Usage in flake.nix

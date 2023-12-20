@@ -1,0 +1,15 @@
+image: nixos/unstable
+environment:
+  NIX_CONFIG: "experimental-features = nix-command flakes"
+packages:
+  - nixos.cachix
+sources:
+  - git@git.sr.ht:~vlaci/crane-maturin
+secrets:
+  - 320b5ff4-49a5-4338-96be-a7a7ad7be595
+  - b8481a7e-bcac-47c5-a8fd-f7502513c6fb
+tasks:
+  - checks: |
+      cachix use crane-maturin
+      cd crane-maturin
+      cachix watch-exec crane-maturin -- nix flake check -L ./dev
