@@ -1,4 +1,5 @@
 { lib
+, pkgs
 , crane-maturin
 , crane
 , system
@@ -7,7 +8,7 @@
 
 let
   src = "${maturin.src}/test-crates/pyo3-pure";
-  craneLib = crane.lib.${system};
+  craneLib = crane.mkLib pkgs;
 in
 crane-maturin.lib.${system}.buildMaturinPythonPackage {
   pname = "pyo3-pure-test-src";
@@ -15,6 +16,6 @@ crane-maturin.lib.${system}.buildMaturinPythonPackage {
   testSrc = lib.cleanSourceWith {
     src = craneLib.path src;
     filter = p: t: (craneLib.filterCargoSources p t)
-                   || (builtins.match ".*/(pyproject\.toml|tests|tests/.*\.py)$" p) != null;
+      || (builtins.match ".*/(pyproject\.toml|tests|tests/.*\.py)$" p) != null;
   };
 }

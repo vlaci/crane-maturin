@@ -1,4 +1,5 @@
 { lib
+, nixpkgs
 , craneLib
 , makeRustPlatform
 , callPackage
@@ -96,20 +97,24 @@ let
             LLVM_PROFDATA = "${llvm}/bin/llvm-profdata";
           };
 
-          nativeBuildInputs = with rustPlatform; with craneLib; [
-            cargo
-            cargoHelperFunctionsHook
-            configureCargoCommonVarsHook
-            configureCargoVendoredDepsHook
-            inheritCargoArtifactsHook
-            installCargoArtifactsHook
-            replaceCargoLockHook
-            rsync
-            zstd
-            (maturinBuildHook.override { pkgsHostTarget = { inherit maturin cargo rustc; }; })
-          ]
-          ++ (args.nativeBuildInputs or [ ])
-          ++ optional coverage cargo-llvm-cov;
+          nativeBuildInputs =
+            let
+              rustHooks = callPackage "${nixpkgs}/pkgs/build-support/rust/hooks" { };
+            in
+            with rustPlatform; with craneLib; [
+              cargo
+              cargoHelperFunctionsHook
+              configureCargoCommonVarsHook
+              configureCargoVendoredDepsHook
+              inheritCargoArtifactsHook
+              installCargoArtifactsHook
+              replaceCargoLockHook
+              rsync
+              zstd
+              (rustHooks.maturinBuildHook.override { pkgsHostTarget = { inherit maturin cargo rustc; }; })
+            ]
+            ++ (args.nativeBuildInputs or [ ])
+            ++ optional coverage cargo-llvm-cov;
 
           passthru = {
             tests = filterAttrs

@@ -8,11 +8,12 @@
     {
       lib = forAllSystems (system:
         let
-          craneLib = crane.lib.${system};
+          pkgs = nixpkgsFor.${system};
+          craneLib = crane.mkLib pkgs;
         in
         {
           buildMaturinPythonPackage =
-            nixpkgsFor.${system}.callPackage ./buildMaturinPythonPackage.nix { inherit craneLib; };
+            pkgs.callPackage ./buildMaturinPythonPackage.nix { inherit nixpkgs craneLib; };
         });
     };
 }
