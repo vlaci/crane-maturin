@@ -108,6 +108,7 @@ let
             zstd
             (maturinBuildHook.override { pkgsHostTarget = { inherit maturin cargo rustc; }; })
           ]
+          ++ (args.nativeBuildInputs or [ ])
           ++ optional coverage cargo-llvm-cov;
 
           passthru = {
