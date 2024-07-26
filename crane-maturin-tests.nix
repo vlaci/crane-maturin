@@ -1,4 +1,4 @@
-{ lib, craneLib, system, cargo, drv, commonArgs, cargoArtifacts, crate, llvm, testSrc, python, cargo-llvm-cov }:
+{ lib, craneLib, system, cargo, drv, commonArgs, cargoArtifacts, crate, testSrc, python, cargo-llvm-cov }:
 
 let
   inherit (python.pkgs) buildPythonPackage pytestCheckHook;
@@ -42,10 +42,7 @@ in
 } // lib.optionalAttrs (system == "x86_64-linux") {
   coverage = craneLib.cargoLlvmCov (commonArgs // {
     inherit cargoArtifacts;
-    env = {
-      LLVM_COV = "${llvm}/bin/llvm-cov";
-      LLVM_PROFDATA = "${llvm}/bin/llvm-profdata";
-    };
+    env = { inherit (cargo-llvm-cov) LLVM_COV LLVM_PROFDATA; };
     cargoLlvmCovExtraArgs = "--ignore-filename-regex /nix/store --codecov --output-path $out";
   });
 
@@ -59,10 +56,7 @@ in
       pytestCheckHook
     ];
 
-    env = {
-      LLVM_COV = "${llvm}/bin/llvm-cov";
-      LLVM_PROFDATA = "${llvm}/bin/llvm-profdata";
-    };
+    env = { inherit (cargo-llvm-cov) LLVM_COV LLVM_PROFDATA; };
 
     preCheck = ''
       source <(cargo llvm-cov show-env --export-prefix)
