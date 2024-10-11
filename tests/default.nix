@@ -1,5 +1,6 @@
-{ lib
-, callPackage
+{
+  lib,
+  callPackage,
 }:
 
 let
@@ -9,7 +10,6 @@ let
     pyo3-pure-test-src = callPackage ./pyo3-pure-test-src.nix { };
   };
 in
-lib.concatMapAttrs (name: value:
-      lib.mapAttrs' (n: v: lib.nameValuePair "${name}-${n}" v) value.passthru.tests
-    )
-checks
+lib.concatMapAttrs (
+  name: value: lib.mapAttrs' (n: v: lib.nameValuePair "${name}-${n}" v) value.passthru.tests
+) checks

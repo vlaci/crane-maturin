@@ -1,9 +1,10 @@
-{ lib
-, pkgs
-, crane-maturin
-, crane
-, system
-, maturin  # used to get example crate to test
+{
+  lib,
+  pkgs,
+  crane-maturin,
+  crane,
+  system,
+  maturin, # used to get example crate to test
 }:
 
 let
@@ -15,7 +16,9 @@ crane-maturin.lib.${system}.buildMaturinPythonPackage {
   inherit src;
   testSrc = lib.cleanSourceWith {
     src = craneLib.path src;
-    filter = p: t: (craneLib.filterCargoSources p t)
+    filter =
+      p: t:
+      (craneLib.filterCargoSources p t)
       || (builtins.match ".*/(pyproject\.toml|tests|tests/.*\.py)$" p) != null;
   };
 }

@@ -1,18 +1,35 @@
-{ lib, craneLib, system, cargo, drv, commonArgs, cargoArtifacts, crate, testSrc, python, cargo-llvm-cov }:
+{
+  lib,
+  craneLib,
+  system,
+  cargo,
+  drv,
+  commonArgs,
+  cargoArtifacts,
+  crate,
+  testSrc,
+  python,
+  cargo-llvm-cov,
+}:
 
 let
   inherit (python.pkgs) buildPythonPackage pytestCheckHook;
 
-  mkPytest = { nameSuffix, ... }@args: buildPythonPackage ({
-    inherit (drv) version;
-    pname = "${drv.pname}-test-${nameSuffix}";
-    format = "other";
+  mkPytest =
+    { nameSuffix, ... }@args:
+    buildPythonPackage (
+      {
+        inherit (drv) version;
+        pname = "${drv.pname}-test-${nameSuffix}";
+        format = "other";
 
-    src = testSrc;
+        src = testSrc;
 
-    dontBuild = true;
-    dontInstall = true;
-  } // (builtins.removeAttrs args [ "nameSuffix" ]));
+        dontBuild = true;
+        dontInstall = true;
+      }
+      // (builtins.removeAttrs args [ "nameSuffix" ])
+    );
 in
 {
   pytest = mkPytest {
@@ -23,28 +40,37 @@ in
     ];
   };
 
-  clippy = craneLib.cargoClippy (commonArgs // {
-    inherit cargoArtifacts;
-    cargoClippyExtraArgs = "--all-targets -- --deny warnings";
-  });
+  clippy = craneLib.cargoClippy (
+    commonArgs
+    // {
+      inherit cargoArtifacts;
+      cargoClippyExtraArgs = "--all-targets -- --deny warnings";
+    }
+  );
 
+  doc = craneLib.cargoDoc (commonArgs // { inherit cargoArtifacts; });
 
-  doc = craneLib.cargoDoc (commonArgs // {
-    inherit cargoArtifacts;
-  });
+  nextest = craneLib.cargoNextest (
+    commonArgs
+    // {
+      inherit cargoArtifacts;
+      partitions = 1;
+      partitionType = "count";
+    }
+  );
 
-  nextest = craneLib.cargoNextest (commonArgs // {
-    inherit cargoArtifacts;
-    partitions = 1;
-    partitionType = "count";
-  });
-
-} // lib.optionalAttrs (system == "x86_64-linux") {
-  coverage = craneLib.cargoLlvmCov (commonArgs // {
-    inherit cargoArtifacts;
-    env = { inherit (cargo-llvm-cov) LLVM_COV LLVM_PROFDATA; };
-    cargoLlvmCovExtraArgs = "--ignore-filename-regex /nix/store --codecov --output-path $out";
-  });
+}
+// lib.optionalAttrs (system == "x86_64-linux") {
+  coverage = craneLib.cargoLlvmCov (
+    commonArgs
+    // {
+      inherit cargoArtifacts;
+      env = {
+        inherit (cargo-llvm-cov) LLVM_COV LLVM_PROFDATA;
+      };
+      cargoLlvmCovExtraArgs = "--ignore-filename-regex /nix/store --codecov --output-path $out";
+    }
+  );
 
   pytest-coverage = mkPytest {
     nameSuffix = "pytest-coverage";
@@ -56,7 +82,9 @@ in
       pytestCheckHook
     ];
 
-    env = { inherit (cargo-llvm-cov) LLVM_COV LLVM_PROFDATA; };
+    env = {
+      inherit (cargo-llvm-cov) LLVM_COV LLVM_PROFDATA;
+    };
 
     preCheck = ''
       source <(cargo llvm-cov show-env --export-prefix)

@@ -1,6 +1,7 @@
-{ crane-maturin
-, system
-, maturin  # used to get example crate to test
+{
+  crane-maturin,
+  system,
+  maturin, # used to get example crate to test
 }:
 
 crane-maturin.lib.${system}.buildMaturinPythonPackage {
