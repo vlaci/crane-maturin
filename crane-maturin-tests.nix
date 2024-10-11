@@ -94,8 +94,8 @@ in
 
     postCheck = ''
       rm -r $out
-      cargo llvm-cov report --ignore-filename-regex "(/nix/store|/std/src)" --summary-only
-      cargo llvm-cov report --ignore-filename-regex "(/nix/store|/std/src)" --codecov --output-path $out
+      cargo llvm-cov report --ignore-filename-regex "(/nix/store|/std/src|rustc-.*-src)" --summary-only
+      cargo llvm-cov report --ignore-filename-regex "(/nix/store|/std/src|rustc-.*-src)" --codecov --output-path $out
     '';
 
   };
