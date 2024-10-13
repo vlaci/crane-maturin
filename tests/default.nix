@@ -1,9 +1,14 @@
 {
+  crane,
+  crane-maturin,
+  pkgs,
   lib,
-  callPackage,
+  newScope,
 }:
 
 let
+  cmLib = crane-maturin.mkLib crane pkgs;
+  callPackage = newScope (pkgs // { inherit cmLib; });
   checks = {
     pyo3-pure = callPackage ./pyo3-pure.nix { };
     pyo3-pure-custom-python = callPackage ./pyo3-pure-custom-python.nix { };

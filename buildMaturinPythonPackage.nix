@@ -1,6 +1,6 @@
 {
   lib,
-  nixpkgs,
+  path,
   craneLib,
   makeRustPlatform,
   callPackage,
@@ -98,7 +98,7 @@ let
         rustPlatform = makeRustPlatform { inherit cargo rustc; };
 
       in
-      (lib.recursiveUpdate
+      lib.recursiveUpdate
         (
           commonArgs
           // (builtins.removeAttrs args [
@@ -130,7 +130,7 @@ let
 
           nativeBuildInputs =
             let
-              rustHooks = callPackage "${nixpkgs}/pkgs/build-support/rust/hooks" { };
+              rustHooks = callPackage "${path}/pkgs/build-support/rust/hooks" { };
             in
             with rustPlatform;
             with craneLib;
@@ -155,13 +155,12 @@ let
 
           passthru = {
             inherit crate;
-            tests = filterAttrs (n: v: isDerivation v) (
+            tests = filterAttrs (_n: isDerivation) (
               callPackage ./crane-maturin-tests.nix {
                 inherit
                   craneLib
                   commonArgs
                   cargoArtifacts
-                  crate
                   drv
                   cargo
                   testSrc
@@ -172,7 +171,6 @@ let
             withCoverage = drv.override { coverage = true; };
           };
         }
-      )
     )
   ) args;
 in

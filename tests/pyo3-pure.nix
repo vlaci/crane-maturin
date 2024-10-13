@@ -1,9 +1,6 @@
 {
-  crane-maturin,
-  system,
+  cmLib,
   maturin, # used to get example crate to test
 }:
 
-crane-maturin.lib.${system}.buildMaturinPythonPackage {
-  src = "${maturin.src}/test-crates/pyo3-pure";
-}
+cmLib.buildMaturinPackage { src = "${maturin.src}/test-crates/pyo3-pure"; }

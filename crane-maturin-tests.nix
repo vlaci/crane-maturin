@@ -6,7 +6,6 @@
   drv,
   commonArgs,
   cargoArtifacts,
-  crate,
   testSrc,
   python,
   cargo-llvm-cov,

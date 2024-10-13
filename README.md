@@ -13,16 +13,13 @@ See also examples in [tests](item/tests)
   inputs.crane.url = "github:ipetkov/crane";
   inputs.nixpkgs.url = "github:NixOS/nixpkgs-unstable";
 
-  inputs.crane-maturin = {
-    url = "sourcehut:~vlaci/crane-maturin";
-    inputs.crane.follows = "crane";
-    inputs.nixpkgs.follows = "nixpkgs";
-  };
+  inputs.crane-maturin.url = "sourcehut:~vlaci/crane-maturin";
   
-  outputs = { crane-maturin, ... }: let
+  outputs = { crane, crane-maturin, nixpkgs, ... }: let
     system = "x86_64-linux";
+    cmLib = crane-maturin.mkLib crane nixpkgs.legacyPackages.${system};
   in {
-    packages.${system}.default = crane-maturin.lib.${system}.buildMaturinPythonPackage {
+    packages.${system}.default = cmLib.buildMaturinPackage {
       src = ./.;
     };
   };

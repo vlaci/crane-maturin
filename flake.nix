@@ -1,28 +1,29 @@
 {
+  inputs = {
+    flake-parts.url = "github:hercules-ci/flake-parts";
+  };
+
   outputs =
-    { nixpkgs, crane, ... }:
-    let
-      supportedSystems = [
-        "x86_64-linux"
-        "x86_64-darwin"
-        "aarch64-linux"
-        "aarch64-darwin"
-      ];
-      forAllSystems = nixpkgs.lib.genAttrs supportedSystems;
-      nixpkgsFor = forAllSystems (system: import nixpkgs { inherit system; });
-    in
-    {
-      lib = forAllSystems (
-        system:
-        let
-          pkgs = nixpkgsFor.${system};
-          craneLib = crane.mkLib pkgs;
-        in
-        {
-          buildMaturinPythonPackage = pkgs.callPackage ./buildMaturinPythonPackage.nix {
-            inherit nixpkgs craneLib;
-          };
-        }
-      );
+    inputs@{ flake-parts, ... }:
+    flake-parts.lib.mkFlake { inherit inputs; } {
+      systems = [ ];
+      imports = [ flake-parts.flakeModules.partitions ];
+      partitionedAttrs.checks = "dev";
+      partitionedAttrs.devShells = "dev";
+      partitions.dev.extraInputsFlake = ./dev;
+      partitions.dev.module = {
+        imports = [ ./dev/flake-module.nix ];
+      };
+      flake = {
+        mkLib =
+          crane: pkgs:
+          let
+            craneLib = crane.mkLib pkgs;
+          in
+          {
+            buildMaturinPackage = pkgs.callPackage ./buildMaturinPythonPackage.nix { inherit craneLib; };
+          }
+          // craneLib;
+      };
     };
 }
