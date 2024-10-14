@@ -2,5 +2,4 @@
 #
 # SPDX-License-Identifier: MIT
 
-watch_file *.nix dev/*.nix
-use flake .
+.pre-commit-config.yaml

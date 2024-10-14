@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: 2024 László Vaskó <vlaci@fastmail.com>
+
+SPDX-License-Identifier: MIT
+-->
+
 # crane-maturin
 
 [![builds.sr.ht status](https://builds.sr.ht/~vlaci/crane-maturin.svg)](https://builds.sr.ht/~vlaci/crane-maturin?)
@@ -28,5 +34,5 @@ See also examples in [tests](item/tests)
 
 ## License
 
-Licensed under MPL-2.0 license ([LICENSE](item/LICENSE)) or <https://opensource.org/licenses/MPL-2.0>
+Licensed under MIT license ([LICENSE](LICENSES/MIT.txt)) or <https://opensource.org/licenses/MIT>
 

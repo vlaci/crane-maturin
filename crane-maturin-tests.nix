@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2024 László Vaskó <vlaci@fastmail.com>
+#
+# SPDX-License-Identifier: MIT
+
 {
   lib,
   craneLib,
