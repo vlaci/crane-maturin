@@ -1,0 +1,7 @@
+{
+  "nix": {
+    "enabled": true,
+
+    "fileMatch": ["(^|/)flake\\.nix$", "(^|/)dev/flake\\.nix$"]
+  }
+}
