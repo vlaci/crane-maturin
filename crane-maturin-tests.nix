@@ -77,16 +77,21 @@ in
   );
 }
 // lib.optionalAttrs (system == "x86_64-linux") {
-  coverage = craneLib.cargoLlvmCov (
-    commonArgs
-    // {
-      inherit cargoArtifacts;
-      env = {
-        inherit (cargo-llvm-cov) LLVM_COV LLVM_PROFDATA;
-      };
-      cargoLlvmCovExtraArgs = "--ignore-filename-regex /nix/store --codecov --output-path $out";
-    }
-  );
+  test-coverage =
+    (craneLib.cargoNextest (
+      commonArgs
+      // {
+        inherit cargoArtifacts;
+        env = {
+          inherit (cargo-llvm-cov) LLVM_COV LLVM_PROFDATA;
+        };
+        cargoLlvmCovExtraArgs = "--ignore-filename-regex /nix/store --codecov --output-path $out/coverage.codecov";
+        withLlvmCov = true;
+      }
+    )).overrideAttrs
+      (super: {
+        pname = "${super.pname}-coverage";
+      });
 
   pytest-coverage = mkPytest {
     nameSuffix = "pytest-coverage";
@@ -109,10 +114,9 @@ in
     '';
 
     postCheck = ''
-      rm -r $out
+      mkdir -p $out
       cargo llvm-cov report --ignore-filename-regex "(/nix/store|/std/src|rustc-.*-src)" --summary-only
-      cargo llvm-cov report --ignore-filename-regex "(/nix/store|/std/src|rustc-.*-src)" --codecov --output-path $out
+      cargo llvm-cov report --ignore-filename-regex "(/nix/store|/std/src|rustc-.*-src)" --codecov --output-path $out/coverage.codecov
     '';
-
   };
 }
