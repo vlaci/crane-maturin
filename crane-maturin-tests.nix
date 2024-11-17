@@ -13,6 +13,7 @@
   testSrc,
   python,
   cargo-llvm-cov,
+  advisory-db,
 }:
 
 let
@@ -64,6 +65,14 @@ in
 
   fmt = craneLib.cargoFmt commonArgs;
 
+}
+// lib.optionalAttrs (advisory-db != null) {
+  audit = craneLib.cargoAudit (
+    commonArgs
+    // {
+      inherit advisory-db;
+    }
+  );
 }
 // lib.optionalAttrs (system == "x86_64-linux") {
   coverage = craneLib.cargoLlvmCov (

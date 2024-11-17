@@ -39,6 +39,7 @@ let
       nativeBuildInputs ? [ ],
       coverage ? false,
       python ? python3,
+      advisory-db ? null,
       ...
     }:
     python.pkgs.buildPythonPackage (
@@ -169,6 +170,7 @@ let
                   cargo
                   testSrc
                   python
+                  advisory-db
                   ;
               }
             );
