@@ -54,12 +54,16 @@ in
 
   doc = craneLib.cargoDoc (commonArgs // { inherit cargoArtifacts; });
 
-  nextest = craneLib.cargoNextest (
-    commonArgs
-    // {
-      inherit cargoArtifacts;
-    }
-  );
+  test =
+    let
+      testCommand = if system == "aarch64-linux" then craneLib.cargoTest else craneLib.cargoNextest;
+    in
+    testCommand (
+      commonArgs
+      // {
+        inherit cargoArtifacts;
+      }
+    );
 
   fmt = craneLib.cargoFmt commonArgs;
 
