@@ -3,3 +3,4 @@
 # SPDX-License-Identifier: MIT
 
 .pre-commit-config.yaml
+.direnv
