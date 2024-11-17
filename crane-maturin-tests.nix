@@ -62,6 +62,8 @@ in
     }
   );
 
+  fmt = craneLib.cargoFmt commonArgs;
+
 }
 // lib.optionalAttrs (system == "x86_64-linux") {
   coverage = craneLib.cargoLlvmCov (
