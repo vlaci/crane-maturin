@@ -12,7 +12,24 @@
 
 let
   cmLib = crane-maturin.mkLib crane pkgs;
-  callPackage = newScope (pkgs // { inherit cmLib; });
+  test-crates = pkgs.runCommandNoCC "test-crates" { inherit (pkgs.maturin) src; } ''
+    mkdir -p $out
+    cp -r $src/test-crates/pyo3-pure $out
+
+    for rs in $out/*/src/lib.rs; do
+      chmod u+w $rs
+      echo $rs
+      cat <<EOF >> $rs
+
+    #[cfg(test)]
+    mod tests {
+        #[test]
+        fn test_dummy() {}
+    }
+    EOF
+    done
+  '';
+  callPackage = newScope (pkgs // { inherit cmLib test-crates; });
   checks = {
     pyo3-pure = callPackage ./pyo3-pure.nix { };
     pyo3-pure-custom-python = callPackage ./pyo3-pure-custom-python.nix { };

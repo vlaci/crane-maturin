@@ -4,7 +4,7 @@
 
 {
   cmLib,
-  maturin, # used to get example crate to test
+  test-crates,
 }:
 
-cmLib.buildMaturinPackage { src = "${maturin.src}/test-crates/pyo3-pure"; }
+cmLib.buildMaturinPackage { src = "${test-crates}/pyo3-pure"; }

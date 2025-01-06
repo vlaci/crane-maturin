@@ -5,11 +5,11 @@
 {
   lib,
   cmLib,
-  maturin, # used to get example crate to test
+  test-crates,
 }:
 
 let
-  src = "${maturin.src}/test-crates/pyo3-pure";
+  src = "${test-crates}/pyo3-pure";
 in
 cmLib.buildMaturinPackage {
   pname = "pyo3-pure-test-src";
