@@ -68,12 +68,13 @@ let
                   cleanedPyprojectToml = {
                     inherit (pyprojectToml) build-system;
                     tool.maturin = pyprojectToml.tool.maturin // {
-                      python-source = "/nonexistent/but/its/okay";
+                      python-source = "missing/but/its/okay";
                     };
                   };
                 in
                 ''
                   cp ${craneLib.writeTOML "pyproject.toml" cleanedPyprojectToml} $out/pyproject.toml
+                  mkdir -p $out/missing/but/its/okay
                 '';
             };
 
