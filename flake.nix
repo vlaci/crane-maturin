@@ -24,10 +24,11 @@
           let
             craneLib = crane.mkLib pkgs;
           in
-          {
-            buildMaturinPackage = pkgs.callPackage ./buildMaturinPythonPackage.nix { inherit craneLib; };
-          }
-          // craneLib;
+          craneLib.overrideScope (
+            final: _prev: {
+              buildMaturinPackage = pkgs.callPackage ./buildMaturinPythonPackage.nix { craneLib = final; };
+            }
+          );
       };
     };
 }
