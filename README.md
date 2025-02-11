@@ -19,7 +19,7 @@ See also examples in [tests](item/tests)
   inputs.crane.url = "github:ipetkov/crane";
   inputs.nixpkgs.url = "github:NixOS/nixpkgs-unstable";
 
-  inputs.crane-maturin.url = "sourcehut:~vlaci/crane-maturin";
+  inputs.crane-maturin.url = "github:vlaci/crane-maturin";
   
   outputs = { crane, crane-maturin, nixpkgs, ... }: let
     system = "x86_64-linux";
