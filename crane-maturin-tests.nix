@@ -109,8 +109,8 @@ in
 
     preCheck = ''
       source <(cargo llvm-cov show-env --export-prefix)
-      LLVM_COV_FLAGS=$(echo -n $(find ${drv.withCoverage} -name "*.so"))
-      export LLVM_COV_FLAGS
+      mkdir -p $CARGO_LLVM_COV_TARGET_DIR/debug
+      find ${drv.withCoverage} -name "*.so" -exec ln -snf {} $CARGO_LLVM_COV_TARGET_DIR/debug/ \;
     '';
 
     postCheck = ''

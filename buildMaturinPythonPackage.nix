@@ -137,6 +137,9 @@ let
           nativeBuildInputs =
             let
               rustHooks = callPackage "${path}/pkgs/build-support/rust/hooks" { };
+              pkgsHostTarget = {
+                inherit maturin cargo rustc;
+              };
             in
             with rustPlatform;
             with craneLib;
@@ -150,11 +153,14 @@ let
               replaceCargoLockHook
               rsync
               zstd
-              (rustHooks.maturinBuildHook.override {
-                pkgsHostTarget = {
-                  inherit maturin cargo rustc;
-                };
-              })
+              (
+                if rustHooks.maturinBuildHook ? override then
+                  rustHooks.maturinBuildHook.override {
+                    inherit pkgsHostTarget;
+                  }
+                else
+                  (rustHooks.override { inherit pkgsHostTarget; }).maturinBuildHook
+              )
             ]
             ++ nativeBuildInputs
             ++ optional coverage cargo-llvm-cov;
