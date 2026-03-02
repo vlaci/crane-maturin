@@ -14,6 +14,7 @@
   python,
   cargo-llvm-cov,
   advisory-db,
+  pytestCheckInputs,
 }:
 
 let
@@ -41,7 +42,7 @@ in
     nativeCheckInputs = [
       drv
       pytestCheckHook
-    ];
+    ] ++ pytestCheckInputs;
   };
 
   clippy = craneLib.cargoClippy (
@@ -101,7 +102,7 @@ in
       cargo
       cargo-llvm-cov
       pytestCheckHook
-    ];
+    ] ++ pytestCheckInputs;
 
     env = {
       inherit (cargo-llvm-cov) LLVM_COV LLVM_PROFDATA;

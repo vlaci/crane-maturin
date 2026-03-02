@@ -37,6 +37,7 @@ let
       testSrc ? src,
       buildInputs ? [ ],
       nativeBuildInputs ? [ ],
+      pytestCheckInputs ? [ ],
       coverage ? false,
       python ? python3,
       advisory-db ? null,
@@ -111,6 +112,7 @@ let
             "cargo"
             "rustc"
             "coverage"
+            "pytestCheckInputs"
           ])
         )
         {
@@ -178,6 +180,7 @@ let
                   testSrc
                   python
                   advisory-db
+                  pytestCheckInputs
                   ;
               }
             );
