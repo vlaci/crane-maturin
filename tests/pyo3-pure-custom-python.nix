@@ -4,12 +4,12 @@
 
 {
   cmLib,
-  python310,
+  python3,
   test-crates,
 }:
 
 cmLib.buildMaturinPackage {
   pname = "pyo3-pure-custom";
   src = "${test-crates}/pyo3-pure";
-  python = python310;
+  python = python3;
 }
