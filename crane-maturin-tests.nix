@@ -42,7 +42,8 @@ in
     nativeCheckInputs = [
       drv
       pytestCheckHook
-    ] ++ pytestCheckInputs;
+    ]
+    ++ pytestCheckInputs;
   };
 
   clippy = craneLib.cargoClippy (
@@ -102,7 +103,8 @@ in
       cargo
       cargo-llvm-cov
       pytestCheckHook
-    ] ++ pytestCheckInputs;
+    ]
+    ++ pytestCheckInputs;
 
     env = {
       inherit (cargo-llvm-cov) LLVM_COV LLVM_PROFDATA;
