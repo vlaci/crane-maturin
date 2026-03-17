@@ -53,6 +53,9 @@ let
           env.PYO3_PYTHON = "${python}/bin/python";
 
           buildInputs = [ python ] ++ lib.optionals stdenv.isDarwin [ libiconv ] ++ buildInputs;
+        }
+        // optionalAttrs (pname != null) {
+          inherit pname;
         };
 
         cargoVendorDir = craneLib.vendorCargoDeps { inherit src; };
