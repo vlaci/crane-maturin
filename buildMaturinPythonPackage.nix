@@ -33,6 +33,7 @@ let
   drv = lib.makeOverridable (
     args@{
       pname ? null,
+      version ? null,
       src,
       testSrc ? src,
       buildInputs ? [ ],
@@ -119,7 +120,7 @@ let
           ])
         )
         {
-          inherit (crate) version;
+          version = if version != null then version else crate.version;
           pname = (if pname != null then pname else crate.pname) + (optionalString coverage "-coverage");
 
           inherit cargoVendorDir;
