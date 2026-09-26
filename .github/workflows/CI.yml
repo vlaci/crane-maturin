@@ -30,4 +30,4 @@ jobs:
           authToken: ${{ secrets.CACHIX_AUTH_TOKEN }}
       - name: Nix Flake checks
         run: |
-          nix flake check -L
+          nix flake check -L ./dev
