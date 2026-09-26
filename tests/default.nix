@@ -12,7 +12,7 @@
 
 let
   cmLib = crane-maturin.mkLib crane pkgs;
-  test-crates = pkgs.runCommandNoCC "test-crates" { inherit (pkgs.maturin) src; } ''
+  test-crates = pkgs.runCommand "test-crates" { inherit (pkgs.maturin) src; } ''
     mkdir -p $out
     cp -r $src/test-crates/pyo3-pure $out
 

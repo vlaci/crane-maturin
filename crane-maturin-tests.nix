@@ -5,7 +5,7 @@
 {
   lib,
   craneLib,
-  system,
+  stdenv,
   cargo,
   drv,
   commonArgs,
@@ -58,7 +58,8 @@ in
 
   test =
     let
-      testCommand = if system == "aarch64-linux" then craneLib.cargoTest else craneLib.cargoNextest;
+      testCommand =
+        if stdenv.hostPlatform.system == "aarch64-linux" then craneLib.cargoTest else craneLib.cargoNextest;
     in
     testCommand (
       commonArgs
@@ -78,7 +79,7 @@ in
     }
   );
 }
-// lib.optionalAttrs (system == "x86_64-linux") {
+// lib.optionalAttrs (stdenv.hostPlatform.system == "x86_64-linux") {
   test-coverage =
     (craneLib.cargoNextest (
       commonArgs

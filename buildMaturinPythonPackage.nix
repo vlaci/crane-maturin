@@ -56,7 +56,7 @@ let
           installCargoArtifactsMode = "use-zstd";
           env.PYO3_PYTHON = "${python}/bin/python";
 
-          buildInputs = [ python ] ++ lib.optionals stdenv.isDarwin [ libiconv ] ++ buildInputs;
+          buildInputs = [ python ] ++ lib.optionals stdenv.hostPlatform.isDarwin [ libiconv ] ++ buildInputs;
         }
         // optionalAttrs (pname != null) {
           inherit pname;
@@ -74,14 +74,11 @@ let
                 let
                   cleanedPyprojectToml = {
                     inherit (pyprojectToml) build-system;
-                    tool.maturin = pyprojectToml.tool.maturin // {
-                      python-source = "missing/but/its/okay";
-                    };
+                    tool.maturin = builtins.removeAttrs pyprojectToml.tool.maturin [ "python-source" ];
                   };
                 in
                 ''
                   cp ${craneLib.writeTOML "pyproject.toml" cleanedPyprojectToml} $out/pyproject.toml
-                  mkdir -p $out/missing/but/its/okay
                 '';
             };
 
