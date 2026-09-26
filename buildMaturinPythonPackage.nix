@@ -46,6 +46,9 @@ let
     }:
     python.pkgs.buildPythonPackage (
       let
+        pyprojectToml = builtins.fromTOML (builtins.readFile (src + "/pyproject.toml"));
+        project = pyprojectToml.project or { };
+
         commonArgs = {
           inherit src nativeBuildInputs;
 
@@ -69,7 +72,6 @@ let
               inherit src;
               extraDummyScript =
                 let
-                  pyprojectToml = builtins.fromTOML (builtins.readFile (src + "/pyproject.toml"));
                   cleanedPyprojectToml = {
                     inherit (pyprojectToml) build-system;
                     tool.maturin = pyprojectToml.tool.maturin // {
@@ -120,12 +122,22 @@ let
           ])
         )
         {
-          version = if version != null then version else crate.version;
+          version =
+            if version != null then
+              version
+            else if project ? version && !(builtins.elem "version" (project.dynamic or [ ])) then
+              project.version
+            else
+              crate.version;
           pname = (if pname != null then pname else crate.pname) + (optionalString coverage "-coverage");
 
           inherit cargoVendorDir;
           cargoArtifacts = cargoMaturinArtifacts;
           pyproject = true;
+
+          # pname may be overridden or "-coverage" suffixed,
+          # so it need not match the wheel's .dist-info
+          dontCheckPythonMetadata = args.dontCheckPythonMetadata or true;
 
           strictDeps = true;
 
