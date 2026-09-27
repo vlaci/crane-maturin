@@ -20,6 +20,10 @@
 let
   inherit (python.pkgs) buildPythonPackage pytestCheckHook;
 
+  # cargo-llvm-cov collects objects named after a crate target,
+  cargoToml = builtins.fromTOML (builtins.readFile (commonArgs.src + "/Cargo.toml"));
+  libName = builtins.replaceStrings [ "-" ] [ "_" ] (cargoToml.lib.name or cargoToml.package.name);
+
   mkPytest =
     { nameSuffix, ... }@args:
     buildPythonPackage (
@@ -114,7 +118,7 @@ in
     preCheck = ''
       source <(cargo llvm-cov show-env --export-prefix)
       mkdir -p $CARGO_LLVM_COV_TARGET_DIR/debug
-      find ${drv.withCoverage} -name "*.so" -exec ln -snf {} $CARGO_LLVM_COV_TARGET_DIR/debug/ \;
+      find ${drv.withCoverage} -name "*.so" -exec ln -snf {} $CARGO_LLVM_COV_TARGET_DIR/debug/lib${libName}.so \;
     '';
 
     postCheck = ''

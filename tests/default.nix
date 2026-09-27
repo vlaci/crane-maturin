@@ -14,7 +14,7 @@ let
   cmLib = crane-maturin.mkLib crane pkgs;
   test-crates = pkgs.runCommand "test-crates" { inherit (pkgs.maturin) src; } ''
     mkdir -p $out
-    cp -r $src/test-crates/pyo3-pure $out
+    cp -r $src/test-crates/{pyo3-pure,pyo3-mixed-py-subdir} $out
 
     for rs in $out/*/src/lib.rs; do
       chmod u+w $rs
@@ -34,6 +34,7 @@ let
     pyo3-pure = callPackage ./pyo3-pure.nix { };
     pyo3-pure-custom-python = callPackage ./pyo3-pure-custom-python.nix { };
     pyo3-pure-test-src = callPackage ./pyo3-pure-test-src.nix { };
+    pyo3-mixed-py-subdir = callPackage ./pyo3-mixed-py-subdir.nix { };
   };
 in
 lib.concatMapAttrs (
