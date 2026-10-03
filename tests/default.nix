@@ -33,6 +33,7 @@ let
   checks = {
     pyo3-pure = callPackage ./pyo3-pure.nix { };
     pyo3-pure-custom-python = callPackage ./pyo3-pure-custom-python.nix { };
+    pyo3-pure-override = callPackage ./pyo3-pure-override.nix { };
     pyo3-pure-test-src = callPackage ./pyo3-pure-test-src.nix { };
     pyo3-mixed-py-subdir = callPackage ./pyo3-mixed-py-subdir.nix { };
   };

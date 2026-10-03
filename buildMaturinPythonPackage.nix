@@ -30,7 +30,7 @@ let
     optionalAttrs
     optionalString
     ;
-  drv = lib.makeOverridable (
+  mkDrv =
     args@{
       pname ? null,
       version ? null,
@@ -46,6 +46,9 @@ let
     }:
     python.pkgs.buildPythonPackage (
       let
+        # This package as built from the current (possibly overridden) args,
+        # so `passthru.tests` and `withCoverage` follow `.override`.
+        drv = lib.makeOverridable mkDrv args;
         pyprojectToml = builtins.fromTOML (builtins.readFile (src + "/pyproject.toml"));
         project = pyprojectToml.project or { };
 
@@ -200,7 +203,6 @@ let
             withCoverage = drv.override { coverage = true; };
           };
         }
-    )
-  ) args;
+    );
 in
-drv
+lib.makeOverridable mkDrv args
