@@ -15,13 +15,16 @@
   cargo-llvm-cov,
   advisory-db,
   pytestCheckInputs,
+  pyprojectToml,
 }:
 
 let
   inherit (python.pkgs) buildPythonPackage pytestCheckHook;
 
   # cargo-llvm-cov collects objects named after a crate target,
-  cargoToml = builtins.fromTOML (builtins.readFile (commonArgs.src + "/Cargo.toml"));
+  # so read the crate maturin builds, not a possible workspace root.
+  manifestPath = pyprojectToml.tool.maturin.manifest-path or "Cargo.toml";
+  cargoToml = builtins.fromTOML (builtins.readFile (commonArgs.src + "/${manifestPath}"));
   libName = builtins.replaceStrings [ "-" ] [ "_" ] (cargoToml.lib.name or cargoToml.package.name);
 
   mkPytest =

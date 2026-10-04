@@ -36,6 +36,7 @@ let
     pyo3-pure-override = callPackage ./pyo3-pure-override.nix { };
     pyo3-pure-test-src = callPackage ./pyo3-pure-test-src.nix { };
     pyo3-mixed-py-subdir = callPackage ./pyo3-mixed-py-subdir.nix { };
+    virtual-workspace = callPackage ./virtual-workspace.nix { };
   };
 in
 lib.concatMapAttrs (

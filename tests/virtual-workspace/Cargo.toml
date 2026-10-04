@@ -1,0 +1,7 @@
+# SPDX-FileCopyrightText: 2026 László Vaskó <vlaci@fastmail.com>
+#
+# SPDX-License-Identifier: MIT
+
+[workspace]
+resolver = "2"
+members = ["crates/binding"]

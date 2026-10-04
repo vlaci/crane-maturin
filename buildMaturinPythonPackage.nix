@@ -197,6 +197,7 @@ let
                   python
                   advisory-db
                   pytestCheckInputs
+                  pyprojectToml
                   ;
               }
             );

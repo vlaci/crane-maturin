@@ -1,0 +1,16 @@
+# SPDX-FileCopyrightText: 2026 László Vaskó <vlaci@fastmail.com>
+#
+# SPDX-License-Identifier: MIT
+
+[build-system]
+requires = ["maturin>=1.0,<2.0"]
+build-backend = "maturin"
+
+[project]
+name = "virtual-workspace"
+version = "0.1.0"
+
+[tool.maturin]
+bindings = "pyo3"
+# Binding crate is a member of a virtual workspace.
+manifest-path = "crates/binding/Cargo.toml"
